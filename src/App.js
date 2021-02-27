@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AutoComplete, Input, Typography, Row, Col, message } from 'antd';
+import { AutoComplete, Input, Typography, Row, Col, message, Button, Form } from 'antd';
 import './App.css';
 import api from './utils/api';
 import parse from 'html-react-parser';
@@ -73,7 +73,7 @@ const App = () => {
   }
 
   const onSend = () => {
-    const data = [
+    const formdata = [
       {
         "key": "type",
         "value": "save",
@@ -85,8 +85,8 @@ const App = () => {
         "type": "text"
       }
     ]
-    const formdata = new FormData(data);
-    api('tag', 'GET', formdata).then(response => {
+    // const formdata = new FormData(data);
+    api('tag', 'POST', { data: formdata }).then(response => {
       message.success('Saved Successfully!');
     })
   }
@@ -94,29 +94,34 @@ const App = () => {
   return (
     <>
       <Row justify='center' className='hashArea__title'>
-        <Col span={4} style={{ paddingLeft: 45 }}>
+        <Col xs={4}>
           <Title>Hash Select</Title>
         </Col>
       </Row>
-      <Row justify='center'>
-        <Col span={4}>
-          <AutoComplete
-            options={options}
-            className='w-100'
-            onSelect={onSelect}
-            onSearch={handleSearch}
-            onChange={onChange}
-            value={selectedValue}
-          >
-            <TextArea
-              placeholder="input here"
-              className="custom"
+      <Form>
+        <Row justify='center'>
+          <Col xs={4} className='flex-column'>
+            <AutoComplete
+              options={options}
+              className='w-100'
+              onSelect={onSelect}
+              onSearch={handleSearch}
+              onChange={onChange}
               value={selectedValue}
-            />
-          </AutoComplete>
-        </Col>
-      </Row>
-
+            >
+              <TextArea
+                placeholder="input here"
+                className="custom"
+                value={selectedValue}
+              />
+            </AutoComplete>
+            <div className='flex-row mt-24'>
+              <Button className='ml-10' type="primary" onClick={onSend}>Send</Button>
+              <Button className='ml-10'>Clear</Button>
+            </div>
+          </Col>
+        </Row>
+      </Form>
     </>
   );
 };
