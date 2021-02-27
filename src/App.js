@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 const App = () => {
   const [options, setOptions] = useState([]);
-  const [selectedValue, setSelectedValue] = useState([]);
+  const [selectedValue, setSelectedValue] = useState('');
 
   const handleSearch = (value) => {
     const values = value.split(' ');
@@ -22,8 +22,7 @@ const App = () => {
         response.data.list.map(item => {
           options.push({value: parse(item)});
         })
-        setOptions(options)
-
+        setOptions(options);
       })
     }
   };
@@ -33,6 +32,17 @@ const App = () => {
     console.log('onSelect', selectedValue);
     message.info(`your selected item is: ${selectedValue}`)
   };
+
+  const onChange = value => {
+    if(Array.isArray(value)) {
+    debugger
+    console.log(value, "value");
+      const selectedValue = `${value[0].props.children}${value[1]}`;
+      setSelectedValue(prevValue => `${prevValue} ${selectedValue}`);
+    }else{
+      setSelectedValue(value);
+    }
+  }
 
   return (
     <>    
@@ -48,11 +58,13 @@ const App = () => {
           className='w-100'
           onSelect={onSelect}
           onSearch={handleSearch}
+          onChange={onChange}
+          value={selectedValue}
         >
           <TextArea
             placeholder="input here"
             className="custom"
-            // value={x => console.log(x)}
+            value={selectedValue}
           />
         </AutoComplete>
       </Col>
